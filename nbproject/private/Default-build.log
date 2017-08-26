@@ -1,0 +1,3 @@
+/bin/mips64-elf-gcc -std=gnu99 -march=vr4300 -mtune=vr4300 -O2 -Wall -Werror -I/include -I/mips64-elf/include   -c -o BowandArrow64.o BowandArrow64.c
+make: /bin/mips64-elf-gcc: Command not found
+make: *** [BowandArrow64.o] Error 127
