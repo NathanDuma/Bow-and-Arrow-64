@@ -1,1 +1,2 @@
-test
+A remake of the original Bow and Arrow game for Windows 95 on a Nintendo 64. This game was made using the libdragon library. 
+How to play: The only emulator that currently supports this game is MESS/MAME. It is however recommended you play this on a real Nintendo 64 using some flash cart (eg. everdrive, 64drive).
