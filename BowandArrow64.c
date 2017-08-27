@@ -13,11 +13,6 @@
 #include <libdragon.h>
 #include <stdlib.h>
 
-typedef struct{
-   float x;
-   float y;
-} lel;
-
 
 int main(){
     /* enable interrupts (on the CPU) */
@@ -32,26 +27,10 @@ int main(){
     /* Initialize Controller */
     controller_init();
     
-    /* Read in single sprite */
-    int fp = dfs_open("/scroll.sprite"); 
-    sprite_t *n64f = malloc(dfs_size(fp));
-    dfs_read(n64f, 1, dfs_size(fp), fp);
-    dfs_close(fp);
-    
     map *m = initMap(0);
-    
-    lel *l = malloc(sizeof(lel));
-    
-    
-    l->x = 0.0;
-    
 
-    /* Main loop test */ 
     while(1){
-        /* Grab a render buffer */
         while(!(m->disp = display_lock()));
-        
         m->render(m);
-        
     }
 }

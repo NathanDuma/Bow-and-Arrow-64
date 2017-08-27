@@ -42,8 +42,15 @@ static void render(map *self){
     
 
     /* Update hero animation */
-
     self->h->playNextAnimation(self->h, &self->disp, keys.c[0].A);
+    
+    
+    // draw all of the weapons on screen
+    for (int i = 0; i < self->quiverMax; i++){
+        if (self->h->w[i].shot){
+            self->h->w[i].playNextAnimation(&self->h->w[i], &self->disp);
+        }
+    }
     
 
     // debug info about hero
@@ -59,11 +66,13 @@ static void render(map *self){
 
 // destruct the map
 static void destructMap(map *self){
+/*
     for (int i = 0; i < self->enemyCount; i++){
         self->e[i].destructEnemy(&self->e[i]);
     }
+*/
     // delete self->e later
-    self->h->destructHero(self->h);
+    self->h->destructHero(self->h, self->quiverMax);
     free(self);
 }
 
@@ -73,7 +82,6 @@ map *initMap(int mapNumber){
     
     // basic map initialization
     self->disp = 0;
-    self->h = initHero();
     self->mapNumber = mapNumber;
     self->render = render;
     self->switchMap = switchMap;
@@ -81,10 +89,12 @@ map *initMap(int mapNumber){
     
     // initialize enemy, enemy count, quiver count
     if (self->mapNumber == 0){
-        self->quiverCount = 100;
+        self->quiverMax = 10;
         self->e = NULL;
         self->enemyCount = 0;
     }
+    
+    self->h = initHero(self->quiverMax);
     
     return self;
 }

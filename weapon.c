@@ -8,9 +8,15 @@
 
 
 static void playNextAnimation(weapon *self, display_context_t *disp){
-    self->ana->state = (int)(self->ana->state + 1) % self->ana->size;
-    graphics_draw_sprite_trans(*disp, self->v->x, 
-                               self->v->y, self->ana[(int)self->ana->state].a);
+    if (self->shot){
+        float inc = 5.0;
+        self->ana->state = (int)(self->ana->state + 1) % self->ana->size;
+        graphics_draw_sprite_trans(*disp, self->v->x, 
+                                   self->v->y, self->ana[(int)self->ana->state].a);
+        // update position of the weapon
+        self->v->x += inc;
+    }
+
 }
 
 static void destructWeapon(weapon *self){
@@ -22,6 +28,7 @@ weapon *initWeapon(char type){
     weapon *self = malloc(sizeof(weapon));
     
     self->type = type; // a for arrow, add more later maybe?
+    self->shot = false;
     
     self->v = malloc(sizeof(vector));
     self->v->x = 0.0;

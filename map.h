@@ -9,7 +9,6 @@
 
 #include "hero.h"
 #include "enemy.h"
-#include "weapon.h"
 #include <malloc.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -17,7 +16,7 @@
 typedef struct map{
     display_context_t disp;
     int mapNumber;
-    int quiverCount;
+    int quiverMax;
     hero *h;
     enemy *e;
     int enemyCount;

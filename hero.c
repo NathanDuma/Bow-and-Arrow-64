@@ -16,13 +16,26 @@ static void playNextAnimation(hero *self, display_context_t *disp, bool pressed)
     } else{
         playNext = self->dead;
     }
-    
+    // draw the player
     if (playNext != NULL){
         // only change animation when pressed
-        if (pressed) playNext->state = (int)(playNext->state + 1) % playNext->size;
+        if (pressed && (self->quiverCount > 0)) playNext->state = (int)(playNext->state + 1) % playNext->size;
         graphics_draw_sprite_trans(*disp, self->v->x, 
                                    self->v->y, playNext[(int)playNext->state].a);
+    
+        if (pressed && (playNext->state == 0) && (self->quiverCount > 0)){
+            // we need to fix the position of the arrows to be in front of hero
+            float arrowBaseX = 45.0;
+            float arrowBaseY = 40.0;
+            self->w[self->quiverCount-1].shot = true;
+            // set position of weapon
+            self->w[self->quiverCount-1].v->x = self->v->x + arrowBaseX;
+            self->w[self->quiverCount-1].v->y = self->v->y + arrowBaseY;
+            
+            self->quiverCount--;
+        }
     }
+
 
     playNext = NULL;
     free(playNext);
@@ -41,12 +54,25 @@ static void move(hero *self, char dir){
 
 
 // destructor for hero struct
-static void destructHero(hero *self){
+static void destructHero(hero *self, int quiverMax){
     // free alive animation
-    free(&self->alive->a);
+    for (int i = 0; i < self->alive->size; i++){
+        free(self->alive[i].a);
+    }
+    free(self->alive);
+    
 
     // free dead animation
-    free(&self->dead->a);
+    for (int i = 0; i < self->dead->size; i++){
+        free(self->dead[i].a);
+    }
+    free(self->dead);
+    
+    // free weapons
+    for (int i = 0; i < quiverMax; i++){
+        self->w[i].destructWeapon(&self->w[i]);
+    }
+    
     
     // free vector
     free(self->v);
@@ -55,7 +81,7 @@ static void destructHero(hero *self){
 
 
 
-hero *initHero(){
+hero *initHero(int quiverMax){
     hero *self = malloc(sizeof(hero));
     // initialize type
     self->type = 'h';
@@ -88,6 +114,12 @@ hero *initHero(){
     self->alive[2].a = malloc(dfs_size(fp));
     dfs_read(self->alive[2].a, 1, dfs_size(fp), fp);
     dfs_close(fp);
+    
+    self->quiverCount = quiverMax;
+    self->w = malloc(sizeof(weapon) * self->quiverCount);
+    for (int i = 0; i < self->quiverCount; i++){
+        self->w[i] = *initWeapon('a');
+    }
     
     // initialize dead animation
     self->dead = malloc(sizeof(animation));

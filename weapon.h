@@ -9,10 +9,12 @@
 
 #include "vector.h"
 #include <malloc.h>
+#include <stdbool.h>
 
 
 typedef struct weapon{
     char type;
+    bool shot;
     vector *v;
     animation *ana;
     
