@@ -4,6 +4,8 @@
     <df root="." name="0">
       <in>BowandArrow64.c</in>
       <in>BowandArrow64.h</in>
+      <in>animation.c</in>
+      <in>animation.h</in>
       <in>enemy.c</in>
       <in>enemy.h</in>
       <in>hero.c</in>
@@ -57,6 +59,10 @@
       <item path="BowandArrow64.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="BowandArrow64.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="animation.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="animation.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="enemy.c" ex="false" tool="0" flavor2="0">
       </item>

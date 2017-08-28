@@ -9,44 +9,43 @@
 
 static void playNextAnimation(weapon *self, display_context_t *disp){
     if (self->shot){
-        float inc = 5.0;
+        float inc = 10.0;
         self->ana->state = (int)(self->ana->state + 1) % self->ana->size;
         graphics_draw_sprite_trans(*disp, self->v->x, 
-                                   self->v->y, self->ana[(int)self->ana->state].a);
+                                   self->v->y, self->ana->a[(int)self->ana->state]);
         // update position of the weapon
         self->v->x += inc;
+        // stop drawing the weapon if it go off screen
+        if (self->v->x >= (SCREENWIDTH + self->ana->a[0]->width)){
+            self->shot = false;
+        }
     }
 
 }
 
 static void destructWeapon(weapon *self){
     free(self->v);
+    self->ana->destructAnimation(self->ana);
     free(self);
 }
 
-weapon *initWeapon(char type){
+weapon *initWeapon(enum weapons w){
     weapon *self = malloc(sizeof(weapon));
     
-    self->type = type; // a for arrow, add more later maybe?
+    self->type = w; // a for arrow, add more later maybe?
     self->shot = false;
     
     self->v = malloc(sizeof(vector));
     self->v->x = 0.0;
     self->v->y = 0.0;
     
-    if (self->type == 'a'){
+    if (self->type == arrows){
         // there are 1 animation for the arrow
         int size = 1;
-        self->ana = malloc(size * sizeof(animation));
-        // initialize alive animation
-        self->ana->size = size;
-        self->ana->state = 0;
-
-        int fp = 0;
-        fp = dfs_open("/arrow.sprite");
-        self->ana[0].a = malloc(dfs_size(fp));
-        dfs_read(self->ana[0].a, 1, dfs_size(fp), fp);
-        dfs_close(fp);
+        const char *arrowSprite[] = {"/arrow.sprite"};
+        
+        self->ana = initAnimation(size);
+        self->ana->addAnimations(self->ana, arrowSprite, size);
     }
 
     

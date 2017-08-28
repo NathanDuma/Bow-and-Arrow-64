@@ -8,17 +8,15 @@
 #define VECTOR_H
 
 #include <libdragon.h>
+#define SCREENWIDTH 640
+#define SCREENHEIGHT 480
+
 
 typedef struct{
     float x;
     float y;
 } vector;
 
-typedef struct{
-    sprite_t *a;
-    int size;
-    char state;
-} animation;
 
 #ifdef __cplusplus
 extern "C" {

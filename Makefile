@@ -41,9 +41,9 @@ $(PROG_NAME).v64: $(PROG_NAME).elf spritemap.dfs
 	$(CHKSUM64PATH) $(PROG_NAME).v64
 
 
-$(PROG_NAME).elf : $(PROG_NAME).o map.o hero.o enemy.o weapon.o
+$(PROG_NAME).elf : $(PROG_NAME).o map.o hero.o enemy.o weapon.o animation.o
 
-	$(LD) -o $(PROG_NAME).elf $(PROG_NAME).o map.o hero.o enemy.o weapon.o $(LINK_FLAGS)
+	$(LD) -o $(PROG_NAME).elf $(PROG_NAME).o map.o hero.o enemy.o weapon.o animation.o $(LINK_FLAGS)
 
 
 

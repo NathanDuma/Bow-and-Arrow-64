@@ -9,6 +9,7 @@
 
 #include "hero.h"
 #include "enemy.h"
+#include "animation.h"
 #include <malloc.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -18,7 +19,7 @@ typedef struct map{
     int mapNumber;
     int quiverMax;
     hero *h;
-    enemy *e;
+    enemy **e;
     int enemyCount;
     
     void (*switchMap)(struct map *self, int mapNumber);

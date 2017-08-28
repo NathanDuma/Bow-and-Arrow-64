@@ -7,21 +7,24 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
-#include <malloc.h>
+
 #include "vector.h"
+#include "animation.h"
+#include "weapon.h"
 #include <stdbool.h>
+#include <malloc.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
+#include <math.h>
 
-/*
- * Enemy types:
- * 
- * 
- * 
- */
+enum enemies{
+    redBalloon, yellowBalloon, bird,
+    butterfly, fire, slime, vulture, wind
+};
 
 typedef struct enemy{
-    char type;
+    enum enemies type;
     bool hit;
     vector *v;
     animation *alive;
@@ -29,11 +32,12 @@ typedef struct enemy{
     
     void (*playNextAnimation)(struct enemy *self, display_context_t *disp);
     void (*move)(struct enemy *self);
-    void (*checkCollison)(struct enemy *self);
+    void (*initLocation)(struct enemy *self, float x, float y);
+    void (*checkCollison)(struct enemy *self, weapon *w);
     void (*destructEnemy)(struct enemy *self);
 } enemy;
 
-//extern enemy *initEnemy();
+enemy *initEnemy(enum enemies e);
 
 #ifdef __cplusplus
 extern "C" {

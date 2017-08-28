@@ -9,17 +9,22 @@
 
 #include "vector.h"
 #include "weapon.h"
+#include "animation.h"
 #include <malloc.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
 
+enum heros{
+    normal
+};
+
 typedef struct hero{
-    char type;
+    enum heros type;
     bool hit;
     int quiverCount;
     vector *v;
-    weapon *w;
+    weapon **w;
     animation *alive;
     animation *dead;
     
@@ -28,7 +33,7 @@ typedef struct hero{
     void (*destructHero)(struct hero *self, int quiverMax);
 } hero;
 
-hero *initHero(int quiverMax);
+hero *initHero(enum heros h, int quiverMax);
 
 #ifdef __cplusplus
 extern "C" {

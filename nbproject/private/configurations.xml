@@ -8,6 +8,8 @@
       </df>
       <in>BowandArrow64.c</in>
       <in>BowandArrow64.h</in>
+      <in>animation.c</in>
+      <in>animation.h</in>
       <in>enemy.c</in>
       <in>enemy.h</in>
       <in>hero.c</in>

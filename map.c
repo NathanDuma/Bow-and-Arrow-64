@@ -40,6 +40,13 @@ static void render(map *self){
         graphics_draw_text(self->disp, 10, 10, "Neutral");
     }
     
+    
+    // check collison
+    for (int i = 0; i < self->enemyCount; i++){
+        for (int j = 0; j < self->quiverMax; j++){
+            self->e[i]->checkCollison(self->e[i], self->h->w[j]);
+        }
+    }
 
     /* Update hero animation */
     self->h->playNextAnimation(self->h, &self->disp, keys.c[0].A);
@@ -47,9 +54,12 @@ static void render(map *self){
     
     // draw all of the weapons on screen
     for (int i = 0; i < self->quiverMax; i++){
-        if (self->h->w[i].shot){
-            self->h->w[i].playNextAnimation(&self->h->w[i], &self->disp);
-        }
+        self->h->w[i]->playNextAnimation(self->h->w[i], &self->disp);
+    }
+    
+    // draw all enemies on the screen
+    for (int i = 0; i < self->enemyCount; i++){
+        self->e[i]->playNextAnimation(self->e[i], &self->disp);
     }
     
 
@@ -58,7 +68,7 @@ static void render(map *self){
     graphics_draw_text(self->disp, 10, 20, tStr);
     sprintf(tStr, "Y: %5.1f\n", self->h->v->y);
     graphics_draw_text(self->disp, 10, 30, tStr);
-    
+
 
     /* Update Display */
     display_show(self->disp);
@@ -66,13 +76,12 @@ static void render(map *self){
 
 // destruct the map
 static void destructMap(map *self){
-/*
     for (int i = 0; i < self->enemyCount; i++){
-        self->e[i].destructEnemy(&self->e[i]);
+        self->e[i]->destructEnemy(self->e[i]);
     }
-*/
-    // delete self->e later
+    free(self->e);
     self->h->destructHero(self->h, self->quiverMax);
+    free(self->h);
     free(self);
 }
 
@@ -89,12 +98,22 @@ map *initMap(int mapNumber){
     
     // initialize enemy, enemy count, quiver count
     if (self->mapNumber == 0){
-        self->quiverMax = 10;
-        self->e = NULL;
-        self->enemyCount = 0;
+        self->quiverMax = 100;
+
+        self->enemyCount = 15;
+        self->e = malloc(sizeof(enemy*) * self->enemyCount);
+        
+        int enemyStartX = 230;
+        int enemyStartY = SCREENHEIGHT;
+        
+        for (int i = 0; i < self->enemyCount; i++){
+            self->e[i] = initEnemy(redBalloon);
+            self->e[i]->initLocation(self->e[i], 
+                    enemyStartX + (i * self->e[i]->alive->a[0]->width), enemyStartY);
+        }
     }
     
-    self->h = initHero(self->quiverMax);
+    self->h = initHero(normal, self->quiverMax);
     
     return self;
 }

@@ -21,21 +21,20 @@ static void playNextAnimation(hero *self, display_context_t *disp, bool pressed)
         // only change animation when pressed
         if (pressed && (self->quiverCount > 0)) playNext->state = (int)(playNext->state + 1) % playNext->size;
         graphics_draw_sprite_trans(*disp, self->v->x, 
-                                   self->v->y, playNext[(int)playNext->state].a);
+                                   self->v->y, playNext->a[(int)playNext->state]);
     
         if (pressed && (playNext->state == 0) && (self->quiverCount > 0)){
             // we need to fix the position of the arrows to be in front of hero
             float arrowBaseX = 45.0;
             float arrowBaseY = 40.0;
-            self->w[self->quiverCount-1].shot = true;
+            self->w[self->quiverCount-1]->shot = true;
             // set position of weapon
-            self->w[self->quiverCount-1].v->x = self->v->x + arrowBaseX;
-            self->w[self->quiverCount-1].v->y = self->v->y + arrowBaseY;
+            self->w[self->quiverCount-1]->v->x = self->v->x + arrowBaseX;
+            self->w[self->quiverCount-1]->v->y = self->v->y + arrowBaseY;
             
             self->quiverCount--;
         }
     }
-
 
     playNext = NULL;
     free(playNext);
@@ -70,55 +69,38 @@ static void destructHero(hero *self, int quiverMax){
     
     // free weapons
     for (int i = 0; i < quiverMax; i++){
-        self->w[i].destructWeapon(&self->w[i]);
+        self->w[i]->destructWeapon(self->w[i]);
     }
     
     
     // free vector
     free(self->v);
-    free(self);
 }
 
 
 
-hero *initHero(int quiverMax){
+hero *initHero(enum heros h, int quiverMax){
     hero *self = malloc(sizeof(hero));
     // initialize type
-    self->type = 'h';
+    self->type = h;
      // initialize hit
     self->hit = false;
     // initialize  vector
     self->v = malloc(sizeof(vector));
-    self->v->x = 50.0;
-    self->v->y = 50.0;
     
     // there are 3 animations for the hero
     int size = 3;
-    self->alive = malloc(size * sizeof(animation));
-    // initialize alive animation
-    self->alive->size = size;
-    self->alive->state = 0;
+    self->alive = initAnimation();
     
-    int fp = 0;
-    fp = dfs_open("/hero_without_arrow.sprite");
-    self->alive[0].a = malloc(dfs_size(fp));
-    dfs_read(self->alive[0].a, 1, dfs_size(fp), fp);
-    dfs_close(fp);
+    const char *heroSprite[] = {"/hero_without_arrow.sprite",
+    "/hero_stand.sprite", "/hero_armed.sprite"};
     
-    fp = dfs_open("/hero_stand.sprite");
-    self->alive[1].a = malloc(dfs_size(fp));
-    dfs_read(self->alive[1].a, 1, dfs_size(fp), fp);
-    dfs_close(fp);
-    
-    fp = dfs_open("/hero_armed.sprite");
-    self->alive[2].a = malloc(dfs_size(fp));
-    dfs_read(self->alive[2].a, 1, dfs_size(fp), fp);
-    dfs_close(fp);
+    self->alive->addAnimations(self->alive, heroSprite, size);
     
     self->quiverCount = quiverMax;
-    self->w = malloc(sizeof(weapon) * self->quiverCount);
+    self->w = malloc(sizeof(weapon*) * self->quiverCount);
     for (int i = 0; i < self->quiverCount; i++){
-        self->w[i] = *initWeapon('a');
+        self->w[i] = initWeapon(arrows);
     }
     
     // initialize dead animation
@@ -130,6 +112,9 @@ hero *initHero(int quiverMax){
     self->destructHero = destructHero;
     self->move = move;
     self->playNextAnimation = playNextAnimation;
+    
+    self->v->x = 0.0;
+    self->v->y = SCREENHEIGHT/2;
     
     return self;
 }

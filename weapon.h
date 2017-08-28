@@ -8,12 +8,16 @@
 #define WEAPON_H
 
 #include "vector.h"
+#include "animation.h"
 #include <malloc.h>
 #include <stdbool.h>
 
+enum weapons{
+    arrows
+};
 
 typedef struct weapon{
-    char type;
+    enum weapons type;
     bool shot;
     vector *v;
     animation *ana;
@@ -23,7 +27,7 @@ typedef struct weapon{
 } weapon;
 
 
-weapon *initWeapon(char type);
+weapon *initWeapon(enum weapons w);
 
 #ifdef __cplusplus
 extern "C" {

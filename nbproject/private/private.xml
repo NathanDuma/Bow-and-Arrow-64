@@ -10,18 +10,18 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/MDR/Desktop/game/map.c</file>
-            <file>file:/C:/Users/MDR/Desktop/game/enemy.c</file>
-            <file>file:/C:/Users/MDR/Desktop/game/weapon.c</file>
-            <file>file:/C:/Users/MDR/Desktop/game/weapon.h</file>
-            <file>file:/C:/Users/MDR/Desktop/game/BowandArrow64.h</file>
-            <file>file:/C:/Users/MDR/Desktop/game/map.h</file>
-            <file>file:/C:/Users/MDR/Desktop/game/hero.c</file>
-            <file>file:/C:/Users/MDR/Desktop/game/mkSprite</file>
-            <file>file:/C:/Users/MDR/Desktop/game/BowandArrow64.c</file>
-            <file>file:/C:/Users/MDR/Desktop/game/hero.h</file>
-            <file>file:/C:/Users/MDR/Desktop/game/enemy.h</file>
-            <file>file:/C:/Users/MDR/Desktop/game/vector.h</file>
+            <file>file:/C:/Users/MDR/Desktop/Bow-and-Arrow-64/map.h</file>
+            <file>file:/C:/Users/MDR/Desktop/Bow-and-Arrow-64/hero.h</file>
+            <file>file:/C:/Users/MDR/Desktop/Bow-and-Arrow-64/weapon.h</file>
+            <file>file:/C:/Users/MDR/Desktop/Bow-and-Arrow-64/BowandArrow64.c</file>
+            <file>file:/C:/Users/MDR/Desktop/Bow-and-Arrow-64/map.c</file>
+            <file>file:/C:/Users/MDR/Desktop/Bow-and-Arrow-64/weapon.c</file>
+            <file>file:/C:/Users/MDR/Desktop/Bow-and-Arrow-64/enemy.h</file>
+            <file>file:/C:/Users/MDR/Desktop/Bow-and-Arrow-64/enemy.c</file>
+            <file>file:/C:/Users/MDR/Desktop/Bow-and-Arrow-64/animation.h</file>
+            <file>file:/C:/Users/MDR/Desktop/Bow-and-Arrow-64/vector.h</file>
+            <file>file:/C:/Users/MDR/Desktop/Bow-and-Arrow-64/hero.c</file>
+            <file>file:/C:/Users/MDR/Desktop/Bow-and-Arrow-64/animation.c</file>
         </group>
     </open-files>
 </project-private>
