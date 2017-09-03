@@ -10,6 +10,7 @@
 
 #include "vector.h"
 #include "animation.h"
+#include "hero.h"
 #include "weapon.h"
 #include <stdbool.h>
 #include <malloc.h>
@@ -19,13 +20,15 @@
 #include <math.h>
 
 enum enemies{
-    redBalloon, yellowBalloon, bird,
-    butterfly, fire, slime, vulture, wind
+    redBalloon, yellowBalloon, butterfly, 
+    fire, slime, vulture, wind, scroll,
+    bullseye
 };
 
 typedef struct enemy{
     enum enemies type;
     bool hit;
+    bool offScreen;
     vector *v;
     animation *alive;
     animation *dead;
@@ -33,7 +36,7 @@ typedef struct enemy{
     void (*playNextAnimation)(struct enemy *self, display_context_t *disp);
     void (*move)(struct enemy *self);
     void (*initLocation)(struct enemy *self, float x, float y);
-    void (*checkCollison)(struct enemy *self, weapon *w);
+    void (*checkCollison)(struct enemy *self, weapon *w, hero *h);
     void (*destructEnemy)(struct enemy *self);
 } enemy;
 

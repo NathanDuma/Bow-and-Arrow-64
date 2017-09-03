@@ -9,6 +9,7 @@
 
 #include <libdragon.h>
 #include <malloc.h>
+#include <stdlib.h>
 
 typedef struct animation{
     sprite_t **a;

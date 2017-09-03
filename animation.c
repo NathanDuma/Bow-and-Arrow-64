@@ -35,6 +35,7 @@ animation *initAnimation(){
     
     self->state = 0;
     self->size = 0;
+    self->a = NULL;
 
     self->addAnimations = addAnimations;
     self->destructAnimation = destructAnimation;

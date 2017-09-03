@@ -19,10 +19,12 @@ enum weapons{
 typedef struct weapon{
     enum weapons type;
     bool shot;
+    bool offScreen;
     vector *v;
     animation *ana;
     
     void (*playNextAnimation)(struct weapon *self, display_context_t *disp);
+    void (*shoot)(struct weapon *self);
     void (*destructWeapon)(struct weapon *self);
 } weapon;
 

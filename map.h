@@ -15,15 +15,14 @@
 #include <stdio.h>
 
 typedef struct map{
-    display_context_t disp;
+    display_context_t *disp;
     int mapNumber;
     int quiverMax;
     hero *h;
     enemy **e;
     int enemyCount;
     
-    void (*switchMap)(struct map *self, int mapNumber);
-    void (*render)(struct map *self);
+    int (*render)(struct map *self);
     void (*destructMap)(struct map *self);
 } map;
 

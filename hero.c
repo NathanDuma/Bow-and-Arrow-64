@@ -24,13 +24,9 @@ static void playNextAnimation(hero *self, display_context_t *disp, bool pressed)
                                    self->v->y, playNext->a[(int)playNext->state]);
     
         if (pressed && (playNext->state == 0) && (self->quiverCount > 0)){
-            // we need to fix the position of the arrows to be in front of hero
-            float arrowBaseX = 45.0;
-            float arrowBaseY = 40.0;
-            self->w[self->quiverCount-1]->shot = true;
-            // set position of weapon
-            self->w[self->quiverCount-1]->v->x = self->v->x + arrowBaseX;
-            self->w[self->quiverCount-1]->v->y = self->v->y + arrowBaseY;
+            self->w[self->quiverCount-1]->v->x = self->v->x;
+            self->w[self->quiverCount-1]->v->y = self->v->y;
+            self->w[self->quiverCount-1]->shoot(self->w[self->quiverCount-1]);
             
             self->quiverCount--;
         }
@@ -42,39 +38,41 @@ static void playNextAnimation(hero *self, display_context_t *disp, bool pressed)
 
 
 // move the character up and down by 5 units
-static void move(hero *self, char dir){
-    float inc = 5.0;
-    if (dir == 'u'){
+static void move(hero *self, enum direction d){
+    float inc = 10.0;
+    if (d == up){
         self->v->y -= inc;
     } else{
         self->v->y += inc;
+    }
+    
+    int heroMoveBoundary = 50;
+    // we need to let the hero not go out of bounds
+    if (self->v->y < -heroMoveBoundary){
+        self->v->y = -heroMoveBoundary;
+    } else if (self->v->y > (SCREENHEIGHT - heroMoveBoundary)){
+        self->v->y = SCREENHEIGHT - heroMoveBoundary;
     }
 }
 
 
 // destructor for hero struct
 static void destructHero(hero *self, int quiverMax){
-    // free alive animation
-    for (int i = 0; i < self->alive->size; i++){
-        free(self->alive[i].a);
-    }
+    // free animations
+    self->alive->destructAnimation(self->alive);
+    self->dead->destructAnimation(self->dead);
     free(self->alive);
-    
-
-    // free dead animation
-    for (int i = 0; i < self->dead->size; i++){
-        free(self->dead[i].a);
-    }
     free(self->dead);
+    
+    // free vector
+    free(self->v);
     
     // free weapons
     for (int i = 0; i < quiverMax; i++){
         self->w[i]->destructWeapon(self->w[i]);
+        free(self->w[i]);
     }
-    
-    
-    // free vector
-    free(self->v);
+    free(self->w);
 }
 
 
@@ -88,33 +86,39 @@ hero *initHero(enum heros h, int quiverMax){
     // initialize  vector
     self->v = malloc(sizeof(vector));
     
-    // there are 3 animations for the hero
-    int size = 3;
-    self->alive = initAnimation();
-    
-    const char *heroSprite[] = {"/hero_without_arrow.sprite",
-    "/hero_stand.sprite", "/hero_armed.sprite"};
-    
-    self->alive->addAnimations(self->alive, heroSprite, size);
-    
-    self->quiverCount = quiverMax;
-    self->w = malloc(sizeof(weapon*) * self->quiverCount);
-    for (int i = 0; i < self->quiverCount; i++){
-        self->w[i] = initWeapon(arrows);
+    if (h == normal){
+        // there are 3 animations for the normal hero
+        int size = 3;
+        self->alive = initAnimation();
+
+        const char *heroAliveSprite[] = {"/hero_without_arrow.sprite",
+        "/hero_stand.sprite", "/hero_armed.sprite"};
+
+        self->alive->addAnimations(self->alive, heroAliveSprite, size);
+
+        // initialize dead animation
+        self->dead = initAnimation();
+
+        const char *heroDeadSprite[] = {"/hero_dead.sprite"};
+
+        self->dead->addAnimations(self->dead, heroDeadSprite, size);
+
+        // initialize the weapons
+        self->quiverCount = quiverMax;
+        self->w = malloc(sizeof(weapon*) * self->quiverCount);
+        for (int i = 0; i < self->quiverCount; i++){
+            self->w[i] = initWeapon(arrows);
+        }
     }
+
     
-    // initialize dead animation
-    self->dead = malloc(sizeof(animation));
-    self->dead->size = 3;
-    self->dead->state = 0;
-    self->dead->a = malloc(sizeof(animation) * self->dead->size);
     // initialize hero functions
     self->destructHero = destructHero;
     self->move = move;
     self->playNextAnimation = playNextAnimation;
     
     self->v->x = 0.0;
-    self->v->y = SCREENHEIGHT/2;
+    self->v->y = rand() % SCREENHEIGHT;
     
     return self;
 }

@@ -29,11 +29,12 @@ typedef struct hero{
     animation *dead;
     
     void (*playNextAnimation)(struct hero *self, display_context_t *disp, bool pressed);
-    void (*move)(struct hero *self, char dir);
+    void (*move)(struct hero *self, enum direction d);
     void (*destructHero)(struct hero *self, int quiverMax);
 } hero;
 
 hero *initHero(enum heros h, int quiverMax);
+void printMessage(const char *message, int x, int y, display_context_t *self);
 
 #ifdef __cplusplus
 extern "C" {

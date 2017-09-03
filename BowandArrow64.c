@@ -12,6 +12,7 @@
 #include <stdint.h>
 #include <libdragon.h>
 #include <stdlib.h>
+#include <time.h>
 
 
 int main(){
@@ -26,11 +27,24 @@ int main(){
     
     /* Initialize Controller */
     controller_init();
+    int currentMap = 0;
+    srand(time(NULL));
     
-    map *m = initMap(0);
+    map *m = initMap(currentMap);
 
     while(1){
-        while(!(m->disp = display_lock()));
-        m->render(m);
+        currentMap = m->render(m);
+        
+        // display the contents of the map
+        display_show(*m->disp);
+        
+        // switch maps if needed
+        if (currentMap != m->mapNumber){
+            m->destructMap(m);
+            free(m);
+            m = initMap(currentMap);
+        }
+        
+        
     }
 }
