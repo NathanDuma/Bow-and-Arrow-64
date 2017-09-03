@@ -223,7 +223,7 @@ static int render(map *self){
         }
 
         // update hero animation
-        self->h->playNextAnimation(self->h, self->disp, keys.c[0].A);
+        self->h->playNextAnimation(self->h, self->disp, anyKey(&keys));
 
         int offScreenQuiverCount = 0;
 
