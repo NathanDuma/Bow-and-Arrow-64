@@ -12,9 +12,9 @@
 #include <stdlib.h>
 
 typedef struct animation{
-    sprite_t **a;
-    int size;
-    char state;
+    sprite_t **a; // array of sprites, access using a[state]
+    int size; // the max amount of animations
+    char state; // the current state of the animation
     
     void (*addAnimations)(struct animation *self, const char *sprites[], int size);
     void (*destructAnimation)(struct animation *self);

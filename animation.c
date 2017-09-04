@@ -7,6 +7,7 @@
 #include "animation.h"
 
 
+// add the sprites to the animation
 static void addAnimations(animation *self, const char *sprites[], int size){
     int fp = 0;
     
@@ -14,6 +15,7 @@ static void addAnimations(animation *self, const char *sprites[], int size){
     
     self->a = malloc(sizeof(sprite_t*) * self->size);
     
+    // load all of the sprites into a
     for (int i = 0; i < self->size; i++){
         fp = dfs_open(sprites[i]);
         self->a[i] = malloc(dfs_size(fp));
@@ -23,6 +25,8 @@ static void addAnimations(animation *self, const char *sprites[], int size){
 }
 
 
+// destruct the animation
+// caller frees
 static void destructAnimation(animation *self){
     for (int i = 0; i < self->size; i++){
         free(self->a[i]);

@@ -17,11 +17,11 @@ enum weapons{
 };
 
 typedef struct weapon{
-    enum weapons type;
-    bool shot;
-    bool offScreen;
-    vector *v;
-    animation *ana;
+    enum weapons type; // type of weapon
+    bool shot; // indicates if the weapon has been already soht
+    bool offScreen; // indicates if the weapon is off screen
+    vector *v; // position of enemy
+    animation *ana; // animation for the weapon
     
     void (*playNextAnimation)(struct weapon *self, display_context_t *disp);
     void (*shoot)(struct weapon *self);

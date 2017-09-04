@@ -20,13 +20,13 @@ enum heros{
 };
 
 typedef struct hero{
-    enum heros type;
-    bool hit;
-    int quiverCount;
-    vector *v;
-    weapon **w;
-    animation *alive;
-    animation *dead;
+    enum heros type; // type of hero
+    bool hit; // whether the hero has been hit by an enemy or not
+    int quiverCount; // amount of quivers left
+    vector *v; // position of hero
+    weapon **w; // the weapons the hero has
+    animation *alive; // alive animation of hero
+    animation *dead; // dead animation of hero
     
     void (*playNextAnimation)(struct hero *self, display_context_t *disp, bool pressed);
     void (*move)(struct hero *self, enum direction d);

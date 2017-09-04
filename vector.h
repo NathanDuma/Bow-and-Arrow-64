@@ -9,19 +9,17 @@
 
 #include <libdragon.h>
 #include <assert.h>
-#include <stdbool.h>
 #define SCREENWIDTH 640
 #define SCREENHEIGHT 480
 
-bool paused;
 
 enum direction{
     up, down
 };
 
 typedef struct{
-    float x;
-    float y;
+    float x; // x coordinate of vector
+    float y; // y coordinate of the vector
     enum direction d; // direction of object
     float speed; // only used for weapons, since weapon struct can't hold any more variables?? (don't know why)
 } vector;

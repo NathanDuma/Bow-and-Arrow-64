@@ -7,14 +7,14 @@
 
 #include "enemy.h"
 
-
+// check if two rectangles (hitboxes) collide
 static bool checkBoundingBox(vector *topLeftR1, vector *bottomRightR1,
                              vector *topLeftR2, vector *bottomRightR2){
     return !((topLeftR1->x > bottomRightR2->x) || (bottomRightR1->x < topLeftR2->x) ||
              (topLeftR1->y > bottomRightR2->y) || (bottomRightR1->y < topLeftR2->y));
 }
 
-
+// check if the object is off screen
 static bool checkOffScreen(float *x, float *y){
     return (*x > SCREENWIDTH || *x < 0) ||
            (*y > SCREENHEIGHT || *y < 0); 
@@ -36,18 +36,21 @@ static void playNextAnimation(enemy *self, display_context_t *disp){
         playNext = self->dead;
     }
     
+    // get next state
     playNext->state = (int)(playNext->state + 1) % playNext->size;
+    
+    // move the object before it has been drawn
+    if (!self->hit || (self->hit && playNext->state == 0)) self->move(self);
+    // draw the enemy
     graphics_draw_sprite_trans(*disp, self->v->x, 
                                self->v->y, playNext->a[(int)playNext->state]);
-    
-    // move the object
-    if (!self->hit || (self->hit && playNext->state == 0)) self->move(self);
     
     playNext = NULL;
     free(playNext);
 }
 
-
+// move the specific enemy
+// some enemies share the same movement types
 static void move(enemy *self){
     if (!self->hit){ // alive animations
         if (self->type == redBalloon){
@@ -96,16 +99,17 @@ static void move(enemy *self){
     }
 }
 
+
+// init location of the enemy and direction
 static void initLocation(enemy *self, float x, float y){
     self->v->x = x;
-    // fix y value
-    //float fixedY = SCREENHEIGHT - 80 - self->alive->a[0]->height;
     self->v->y = y;
 
     self->v->d = up;
     self->offScreen = false;
 }
 
+// check collison between the enemy and (weapon or hero)
 static void checkCollison(enemy *self, weapon *w, hero *h){
     // get the weapon hitbox
     float inwardFactor = 0.75;
@@ -172,12 +176,16 @@ static void checkCollison(enemy *self, weapon *w, hero *h){
 }
 
 
+// destruct enemy
+// caller frees self
 static void destructEnemy(enemy *self){
+    // free the alive and dead animation
     self->alive->destructAnimation(self->alive);
     self->dead->destructAnimation(self->dead);
     free(self->alive);
     free(self->dead);
     
+    // free vector
     free(self->v);
 }
 
@@ -185,23 +193,28 @@ static void destructEnemy(enemy *self){
 enemy *initEnemy(enum enemies e){
     enemy *self = malloc(sizeof(enemy));
     
+    // init vector
     self->v = malloc(sizeof(vector));
     self->v->x = 0.0;
     self->v->y = 0.0;
 
+    // init variables
     self->type = e;
     self->hit = false;
     self->offScreen = true;
     
+    // init functions for enemy
     self->checkCollison = checkCollison;
     self->move = move;
     self->initLocation = initLocation;
     self->destructEnemy = destructEnemy;
     self->playNextAnimation = playNextAnimation;
     
+    // init animations
     self->alive = initAnimation();
     self->dead = initAnimation();
     
+    // load animations based off type
     if (e == redBalloon){
         int aliveSize = 1;
         int deadSize = 1;
@@ -239,6 +252,7 @@ enemy *initEnemy(enum enemies e){
     } else if (e == slime){
         int aliveSize = 1;
         int deadSize = 5;
+        
         const char *slimeAlive[] = {"/slime.sprite"};
         const char *slimeDead[] = {"/slime_dead.sprite", "/slime_dead.sprite", 
              "/slime_dead.sprite", "/slime_dead.sprite", "/slime_dead.sprite"};
@@ -248,6 +262,7 @@ enemy *initEnemy(enum enemies e){
     } else if (e == vulture){
         int aliveSize = 4;
         int deadSize = 4;
+        
         const char *vultureAlive[] = {"/vulture1.sprite", "/vulture1.sprite",
                                       "/vulture2.sprite", "/vulture2.sprite"};
         const char *vulturenDead[] = {"/vulture_dead.sprite", "/vulture_dead.sprite",
@@ -258,6 +273,7 @@ enemy *initEnemy(enum enemies e){
     } else if (e == wind){
         int aliveSize = 4;
         int deadSize = 5;
+        
         const char *windAlive[] = {"/wind1.sprite", "/wind1.sprite",
                                    "/wind2.sprite", "/wind2.sprite"};
         const char *windDead[] = {"/wind_dead.sprite", "/wind_dead.sprite",
@@ -283,6 +299,5 @@ enemy *initEnemy(enum enemies e){
         self->dead->addAnimations(self->dead, bullseyeDead, deadSize);
     }
             
-    
     return self;
 }

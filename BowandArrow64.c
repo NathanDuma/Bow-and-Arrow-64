@@ -27,8 +27,12 @@ int main(){
     
     /* Initialize Controller */
     controller_init();
-    int currentMap = 0;
+    
+    // init RNG
     srand(time(NULL));
+    
+    // start map is 0
+    int currentMap = 0;
     
     map *m = initMap(currentMap);
 
@@ -44,7 +48,8 @@ int main(){
             free(m);
             m = initMap(currentMap);
         }
-        
-        
     }
+    // never reached
+    m->destructMap(m);
+    free(m);
 }

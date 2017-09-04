@@ -6,10 +6,11 @@
 
 #include "map.h"
 
+// get any button press from the controller
 static bool anyKey(struct controller_data *keys){
     return keys->c[0].A || keys->c[0].B || keys->c[0].C_up || keys->c[0].C_down ||
            keys->c[0].C_left || keys->c[0].C_right || keys->c[0].L || 
-           keys->c[0].R || keys->c[0].Z || keys->c[0].start;
+           keys->c[0].R || keys->c[0].Z;
 }
 
 // prints a message on screen at x,y (max 300 characters long)
@@ -20,6 +21,7 @@ void printMessage(const char *message, int x, int y, display_context_t *disp){
     graphics_draw_text(*disp, x, y, tStr);
 }
 
+// render the map every frame
 static int render(map *self){
     while(!(*self->disp = display_lock()));
     
@@ -30,7 +32,7 @@ static int render(map *self){
     controller_scan();
     struct controller_data keys = get_keys_pressed();
     
-    // we are printing the scrolls now
+    // we are printing the scroll text now
     if (self->mapNumber % 2 == 0){
         // show the scroll animation
         self->e[0]->playNextAnimation(self->e[0], self->disp);
@@ -196,6 +198,7 @@ static int render(map *self){
         } else{
             return self->mapNumber;
         }
+        
     } else{ // we are rending the gameplay
         // move hero
         if(keys.c[0].up || keys.c[0].y > 0){
@@ -215,10 +218,12 @@ static int render(map *self){
             return self->mapNumber;
         }
    
-        // check collison
+        // check collison between enemies and quiver
         for (int i = 0; i < self->enemyCount; i++){
             for (int j = 0; j < self->quiverMax; j++){
-                self->e[i]->checkCollison(self->e[i], self->h->w[j], self->h);
+                if (!self->e[i]->hit && !self->e[i]->offScreen){
+                    self->e[i]->checkCollison(self->e[i], self->h->w[j], self->h);
+                } 
             }
         }
 
@@ -229,7 +234,8 @@ static int render(map *self){
 
         // draw all of the weapons on screen
         for (int i = 0; i < self->quiverMax; i++){
-            self->h->w[i]->playNextAnimation(self->h->w[i], self->disp);
+            if (self->h->w[i]->shot && !self->h->w[i]->offScreen)
+                self->h->w[i]->playNextAnimation(self->h->w[i], self->disp);
             if (self->h->w[i]->offScreen && self->h->w[i]->shot) offScreenQuiverCount++;
         }
 
@@ -274,11 +280,13 @@ static int render(map *self){
 }
 
 // destruct the map
+// caller frees self
 static void destructMap(map *self){
     // free enemies
     for (int i = 0; i < self->enemyCount; i++){
         self->e[i]->destructEnemy(self->e[i]);
-    };
+        free(self->e[i]);
+    }
     free(self->e);
     
     // free hero
@@ -290,7 +298,21 @@ static void destructMap(map *self){
     
 }
 
-// initialize the map
+/* initialize the map
+ * Map numbers:
+ * mapNumber % 2 = 0 correspond to maps with the scrolls, where text is printed.
+ * The negative map numbers correspond to the losing message given the map
+ * number as -mapNumber -1
+ * 1: line of balloons
+ * 3: red/yellow balloons randomly
+ * 5: captured butterflies
+ * 7: slimes
+ * 9: bullseye
+ * 11: fire
+ * 13: vultures
+ * 15: vultures (TODO: add this level and sprites)
+ * 17: random? (TODO: add this level and the sprites)
+ */
 map *initMap(int mapNumber){
     map *self = malloc(sizeof(map));
     
@@ -339,7 +361,7 @@ map *initMap(int mapNumber){
             rand() % (SCREENWIDTH + 1 - heroWidth) + heroWidth,
             rand() * SCREENHEIGHT);
         }
-        // put yellow baloons randomly
+        // put yellow balloons randomly
         for (int i = self->enemyCount-5; i < self->enemyCount; i++){
             self->e[i] = initEnemy(yellowBalloon);
             self->e[i]->initLocation(self->e[i], 
@@ -382,9 +404,9 @@ map *initMap(int mapNumber){
         self->quiverMax = 10;
                 
         self->e = malloc(sizeof(enemy*) * self->enemyCount);
-        
+        // put the bullseye on screen
         self->e[0] = initEnemy(bullseye);
-        int enemyStartX = SCREENWIDTH - 3 * self->e[0]->alive->a[0]->width;
+        int enemyStartX = SCREENWIDTH - 4 * self->e[0]->alive->a[0]->width;
         int enemyStartY = rand() % (SCREENHEIGHT - 80);
         self->e[0]->initLocation(self->e[0], enemyStartX, enemyStartY);
     } else if (self->mapNumber == 11){
@@ -444,9 +466,10 @@ map *initMap(int mapNumber){
         int heroWidth = 3 * 103;
         int screenLength = 6;
         
+        // put fire, slime, vulture, wind in this array to choose randomly
         const int enemies[4] = {3, 4, 5, 6};
 
-        // put vultures randomly
+        // put enemies randomly
         for (int i = 0; i < self->enemyCount; i++){
             self->e[i] = initEnemy(enemies[rand() % 4]);
             self->e[i]->initLocation(self->e[i], 

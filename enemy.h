@@ -26,12 +26,12 @@ enum enemies{
 };
 
 typedef struct enemy{
-    enum enemies type;
-    bool hit;
-    bool offScreen;
-    vector *v;
-    animation *alive;
-    animation *dead;
+    enum enemies type; // type of enemy
+    bool hit; // indicates whether or not the enemy has been hit
+    bool offScreen; // indicates if the enemy is off screen
+    vector *v; // position of enemy
+    animation *alive; // alive animation
+    animation *dead; // dead animation
     
     void (*playNextAnimation)(struct enemy *self, display_context_t *disp);
     void (*move)(struct enemy *self);

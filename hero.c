@@ -22,7 +22,7 @@ static void playNextAnimation(hero *self, display_context_t *disp, bool pressed)
         if (pressed && (self->quiverCount > 0)) playNext->state = (int)(playNext->state + 1) % playNext->size;
         graphics_draw_sprite_trans(*disp, self->v->x, 
                                    self->v->y, playNext->a[(int)playNext->state]);
-    
+        // if the arrow went from shooting to neutral, fire the weapon
         if (pressed && (playNext->state == 0) && (self->quiverCount > 0)){
             self->w[self->quiverCount-1]->v->x = self->v->x;
             self->w[self->quiverCount-1]->v->y = self->v->y;
@@ -37,7 +37,7 @@ static void playNextAnimation(hero *self, display_context_t *disp, bool pressed)
 }
 
 
-// move the character up and down by 5 units
+// move the character up and down by inc units
 static void move(hero *self, enum direction d){
     float inc = 10.0;
     if (d == up){
@@ -47,7 +47,7 @@ static void move(hero *self, enum direction d){
     }
     
     int heroMoveBoundary = 50;
-    // we need to let the hero not go out of bounds
+    // we need to let the hero not go out of screen bounds
     if (self->v->y < -heroMoveBoundary){
         self->v->y = -heroMoveBoundary;
     } else if (self->v->y > (SCREENHEIGHT - heroMoveBoundary)){
@@ -57,6 +57,7 @@ static void move(hero *self, enum direction d){
 
 
 // destructor for hero struct
+// caller frees self
 static void destructHero(hero *self, int quiverMax){
     // free animations
     self->alive->destructAnimation(self->alive);
