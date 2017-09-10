@@ -89,11 +89,11 @@ hero *initHero(enum heros h, int quiverMax){
     
     if (h == normal){
         // there are 3 animations for the normal hero
-        int size = 3;
+        int size = 4;
         self->alive = initAnimation();
 
         const char *heroAliveSprite[] = {"/hero_without_arrow.sprite",
-        "/hero_stand.sprite", "/hero_armed.sprite"};
+        "/hero_stand.sprite", "/hero_almost_armed.sprite", "/hero_armed.sprite"};
 
         self->alive->addAnimations(self->alive, heroAliveSprite, size);
 

@@ -6,6 +6,8 @@
 
 #include "map.h"
 
+bool paused; // used to pause the game
+
 // get any button press from the controller
 static bool anyKey(struct controller_data *keys){
     return keys->c[0].A || keys->c[0].B || keys->c[0].C_up || keys->c[0].C_down ||
@@ -36,9 +38,22 @@ static int render(map *self){
     if (self->mapNumber % 2 == 0){
         // show the scroll animation
         self->e[0]->playNextAnimation(self->e[0], self->disp);
+        // show the dead hero animation if we are on a dead screen
+        // only show this for maps where you can get hit (no balloons or bullseye map)
+        if (self->mapNumber < -4 && self->mapNumber != -8){
+            self->h->hit = true;
+
+            self->h->v->x = 0.0;
+            self->h->v->y = SCREENHEIGHT/2;
+            
+            self->h->playNextAnimation(self->h, self->disp, false);
+        }
+        
         int textStartX = SCREENWIDTH/2 - 103;
         int textStartY = SCREENHEIGHT/2 - 70;
+        
         graphics_set_color(0x00000001, 0x00000000);
+        
         if (self->mapNumber == -18){
             printMessage("\t    ---ZAP---\n\n\n\n"
                          " Watch out for the GUARDIANS\n\n\n"
@@ -314,11 +329,13 @@ static void destructMap(map *self){
  * 17: random? (TODO: add this level and the sprites)
  */
 map *initMap(int mapNumber){
-    map *self = malloc(sizeof(map));
+    map *self = (map*)malloc(sizeof(map));
     
     // basic map initialization
-    self->disp = malloc(sizeof(display_context_t));
+    self->disp = (display_context_t*)malloc(sizeof(display_context_t));
     *self->disp = 0;
+    
+    
     self->mapNumber = mapNumber;
     self->render = render;
     self->destructMap = destructMap;
@@ -326,17 +343,20 @@ map *initMap(int mapNumber){
     // initialize enemy, enemy count, quiver count and enemies
     if (self->mapNumber % 2 == 0){ // every even number map is a scroll with text
         self->enemyCount = 1;
-        self->e = malloc(sizeof(enemy*) * self->enemyCount);
+        self->e = (enemy**)malloc(sizeof(enemy*) * self->enemyCount);
         
         int enemyStartX = SCREENWIDTH/2 - 133;
         int enemyStartY = SCREENHEIGHT/2 - 110;
+        
         self->e[0] = initEnemy(scroll);
         self->e[0]->initLocation(self->e[0], enemyStartX, enemyStartY);
+        
+
     } else if (self->mapNumber == 1){
         self->quiverMax = 15;
 
         self->enemyCount = 15;
-        self->e = malloc(sizeof(enemy*) * self->enemyCount);
+        self->e = (enemy**)malloc(sizeof(enemy*) * self->enemyCount);
         
         int enemyStartX = 230;
         int enemyStartY = SCREENHEIGHT;
@@ -350,7 +370,7 @@ map *initMap(int mapNumber){
         self->quiverMax = 25;
 
         self->enemyCount = 20;
-        self->e = malloc(sizeof(enemy*) * self->enemyCount);
+        self->e = (enemy**)malloc(sizeof(enemy*) * self->enemyCount);
         
         int heroWidth = 2 * 103;
 
@@ -372,7 +392,7 @@ map *initMap(int mapNumber){
         self->quiverMax = 50;
 
         self->enemyCount = 30;
-        self->e = malloc(sizeof(enemy*) * self->enemyCount);
+        self->e = (enemy**)malloc(sizeof(enemy*) * self->enemyCount);
         
         int heroWidth = 2 * 103;
 
@@ -387,7 +407,7 @@ map *initMap(int mapNumber){
         self->quiverMax = 100;
 
         self->enemyCount = 50;
-        self->e = malloc(sizeof(enemy*) * self->enemyCount);
+        self->e = (enemy**)malloc(sizeof(enemy*) * self->enemyCount);
         
         int heroWidth = 3 * 103;
         int screenLength = 6;
@@ -403,7 +423,7 @@ map *initMap(int mapNumber){
         self->enemyCount = 1;
         self->quiverMax = 10;
                 
-        self->e = malloc(sizeof(enemy*) * self->enemyCount);
+        self->e = (enemy**)malloc(sizeof(enemy*) * self->enemyCount);
         // put the bullseye on screen
         self->e[0] = initEnemy(bullseye);
         int enemyStartX = SCREENWIDTH - 4 * self->e[0]->alive->a[0]->width;
@@ -413,7 +433,7 @@ map *initMap(int mapNumber){
         self->quiverMax = 100;
 
         self->enemyCount = 50;
-        self->e = malloc(sizeof(enemy*) * self->enemyCount);
+        self->e = (enemy**)malloc(sizeof(enemy*) * self->enemyCount);
         
         int heroWidth = 3 * 103;
         int screenLength = 6;
@@ -429,7 +449,7 @@ map *initMap(int mapNumber){
         self->quiverMax = 100;
 
         self->enemyCount = 50;
-        self->e = malloc(sizeof(enemy*) * self->enemyCount);
+        self->e = (enemy**)malloc(sizeof(enemy*) * self->enemyCount);
         
         int heroWidth = 3 * 103;
         int screenLength = 6;
@@ -445,7 +465,7 @@ map *initMap(int mapNumber){
         self->quiverMax = 100;
 
         self->enemyCount = 50;
-        self->e = malloc(sizeof(enemy*) * self->enemyCount);
+        self->e = (enemy**)malloc(sizeof(enemy*) * self->enemyCount);
         
         int heroWidth = 3 * 103;
         int screenLength = 6;
@@ -461,17 +481,17 @@ map *initMap(int mapNumber){
         self->quiverMax = 100;
 
         self->enemyCount = 50;
-        self->e = malloc(sizeof(enemy*) * self->enemyCount);
+        self->e = (enemy**)malloc(sizeof(enemy*) * self->enemyCount);
         
         int heroWidth = 3 * 103;
         int screenLength = 6;
         
         // put fire, slime, vulture, wind in this array to choose randomly
-        const int enemies[4] = {3, 4, 5, 6};
+        //const int randomEnemy[4] = {3, 4, 5, 6};
 
         // put enemies randomly
         for (int i = 0; i < self->enemyCount; i++){
-            self->e[i] = initEnemy(enemies[rand() % 4]);
+            self->e[i] = initEnemy(scroll);
             self->e[i]->initLocation(self->e[i], 
             rand() % ((screenLength * SCREENWIDTH) + 1 - heroWidth) + heroWidth,
             rand() % (SCREENHEIGHT - 80));

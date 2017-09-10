@@ -21,9 +21,9 @@ typedef struct map{
     display_context_t *disp; // render graphics to screen using the display
     int mapNumber; // current map number
     int quiverMax; // maximum amount of quivers for the map
+    int enemyCount; // the amount of enemies on the map
     hero *h; // the current hero character
     enemy **e; // array of enemies on the map
-    int enemyCount; // the amount of enemies on the map
     
     int (*render)(struct map *self);
     void (*destructMap)(struct map *self);
