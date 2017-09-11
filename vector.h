@@ -7,10 +7,10 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
+#include "debug.h"
 #include <libdragon.h>
 #include <assert.h>
-#define SCREENWIDTH 640
-#define SCREENHEIGHT 480
+#include <malloc.h>
 
 
 enum direction{
@@ -23,6 +23,8 @@ typedef struct{
     enum direction d; // direction of object
     float speed; // only used for weapons, since weapon struct can't hold any more variables?? (don't know why)
 } vector;
+
+vector *initVector();
 
 
 #ifdef __cplusplus

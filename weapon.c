@@ -51,22 +51,29 @@ static void shoot(weapon *self){
 
 
 static void destructWeapon(weapon *self){
+    printDebugMessage("Calling destructAnimation(self->ana)");
     self->ana->destructAnimation(self->ana);
-    free(self->ana);
     
+    free(self->ana);
+    printDebugMessage("Freed self->ana");
+    
+    // free vector
     free(self->v);
+    printDebugMessage("Freed self->v");
+    
+    printDebugMessage("END destructWeapon");
 }
 
 weapon *initWeapon(enum weapons w){
     weapon *self = malloc(sizeof(weapon));
     
+    if (!self) printDebugMessage("Failed to allocate weapon *self");
+    
     self->type = w; // a for arrow, add more later maybe?
     self->shot = false;
     self->offScreen = true;
     
-    self->v = malloc(sizeof(vector));
-    self->v->x = 0.0;
-    self->v->y = 0.0;
+    self->v = initVector();
     
     if (self->type == arrows){
         // there are 1 animation for the arrow

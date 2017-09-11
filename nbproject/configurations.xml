@@ -6,12 +6,15 @@
       <in>BowandArrow64.h</in>
       <in>animation.c</in>
       <in>animation.h</in>
+      <in>debug.c</in>
+      <in>debug.h</in>
       <in>enemy.c</in>
       <in>enemy.h</in>
       <in>hero.c</in>
       <in>hero.h</in>
       <in>map.c</in>
       <in>map.h</in>
+      <in>vector.c</in>
       <in>vector.h</in>
       <in>weapon.c</in>
       <in>weapon.h</in>
@@ -64,6 +67,10 @@
       </item>
       <item path="animation.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="debug.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="debug.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="enemy.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="enemy.h" ex="false" tool="3" flavor2="0">
@@ -75,6 +82,8 @@
       <item path="map.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="map.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="vector.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="vector.h" ex="false" tool="3" flavor2="0">
       </item>

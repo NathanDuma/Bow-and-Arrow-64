@@ -7,13 +7,14 @@
 #ifndef WEAPON_H
 #define WEAPON_H
 
+#include "debug.h"
 #include "vector.h"
 #include "animation.h"
 #include <malloc.h>
 #include <stdbool.h>
 
 enum weapons{
-    arrows
+    arrows, thunder, apple
 };
 
 typedef struct weapon{

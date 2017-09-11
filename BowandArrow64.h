@@ -7,9 +7,6 @@
 #ifndef BOWANDARROW64_H
 #define BOWANDARROW64_H
 
-extern int SCREENHEIGHT;
-extern int SCREENWIDTH;
-
 
 #ifdef __cplusplus
 extern "C" {

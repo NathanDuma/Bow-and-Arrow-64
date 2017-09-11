@@ -40,7 +40,7 @@ static void playNextAnimation(enemy *self, display_context_t *disp){
     playNext->state = (int)(playNext->state + 1) % playNext->size;
     
     // move the object before it has been drawn
-    if (!self->hit || (self->hit && playNext->state == 0)) self->move(self);
+    if (!self->hit || (playNext->state == 0)) self->move(self);
     // draw the enemy
     graphics_draw_sprite_trans(*disp, self->v->x, 
                                self->v->y, playNext->a[(int)playNext->state]);
@@ -144,7 +144,6 @@ static void checkCollison(enemy *self, weapon *w, hero *h){
         } 
     } else if (self->type == butterfly || self->type == slime || 
                self->type == fire || self->type == vulture ||
-               self->type == wind || self->type == vulture ||
                self->type == wind){
         // width and height of hitbox
         float width = (float)self->alive->a[0]->width;
@@ -179,24 +178,35 @@ static void checkCollison(enemy *self, weapon *w, hero *h){
 // destruct enemy
 // caller frees self
 static void destructEnemy(enemy *self){
-    // free the alive and dead animation
+    // free animations
+    printDebugMessage("Calling destructAnimation(self->alive)");
     self->alive->destructAnimation(self->alive);
+    printDebugMessage("Destructed self->alive");
+    
     self->dead->destructAnimation(self->dead);
+    printDebugMessage("Destructed self->dead");
+    
     free(self->alive);
+    printDebugMessage("Freed self->alive");
+    
     free(self->dead);
+    printDebugMessage("Freed self->dead");
     
     // free vector
     free(self->v);
+    printDebugMessage("Freed self->v");
+    
+    printDebugMessage("END destructEnemy");
 }
 
 
 enemy *initEnemy(enum enemies e){
     enemy *self = malloc(sizeof(enemy));
     
+    if (!self) printDebugMessage("Failed to allocate enemy *self");
+    
     // init vector
-    self->v = malloc(sizeof(vector));
-    self->v->x = 0.0;
-    self->v->y = 0.0;
+    self->v = initVector();
 
     // init variables
     self->type = e;
@@ -297,6 +307,70 @@ enemy *initEnemy(enum enemies e){
         
         self->alive->addAnimations(self->alive, bullseyeAlive, aliveSize);
         self->dead->addAnimations(self->dead, bullseyeDead, deadSize);
+    } else if (e == dove){
+        int aliveSize = 2;
+        int deadSize = 1;
+        const char *doveAlive[] = {"/dove1.sprite", "/dove2.sprite"};
+        const char *doveDead[] = {"/null.sprite"};
+        
+        self->alive->addAnimations(self->alive, doveAlive, aliveSize);
+        self->dead->addAnimations(self->dead, doveDead, deadSize);
+    } else if (e == tree){
+        int aliveSize = 2;
+        int deadSize = 1;
+        const char *treeAlive[] = {"/tree1.sprite", "/tree2.sprite"};
+        const char *treeDead[] = {"/tree_dead.sprite"};
+        
+        self->alive->addAnimations(self->alive, treeAlive, aliveSize);
+        self->dead->addAnimations(self->dead, treeDead, deadSize);
+    } else if (e == flame){
+        int aliveSize = 1;
+        int deadSize = 1;
+        const char *flameAlive[] = {"/flame.sprite"};
+        const char *flameDead[] = {"/null.sprite"};
+        
+        self->alive->addAnimations(self->alive, flameAlive, aliveSize);
+        self->dead->addAnimations(self->dead, flameDead, deadSize);
+    } else if (e == watcher){
+        int aliveSize = 1;
+        int deadSize = 1;
+        const char *watcherAlive[] = {"/watcher1.sprite"};
+        const char *watcherDead[] = {"/watcher2.sprite"};
+        
+        self->alive->addAnimations(self->alive, watcherAlive, aliveSize);
+        self->dead->addAnimations(self->dead, watcherDead, deadSize);
+    } else if (e == fairy){
+        int aliveSize = 1;
+        int deadSize = 1;
+        const char *fairyAlive[] = {"/fairy_trapped.sprite"};
+        const char *fairyDead[] = {"/fairy.sprite"};
+        
+        self->alive->addAnimations(self->alive, fairyAlive, aliveSize);
+        self->dead->addAnimations(self->dead, fairyDead, deadSize);
+    } else if (e == flashm1){
+        int aliveSize = 1;
+        int deadSize = 1;
+        const char *flashm1Alive[] = {"/flashm1.sprite"};
+        const char *flashm1Dead[] = {"/flashm1.sprite"};
+        
+        self->alive->addAnimations(self->alive, flashm1Alive, aliveSize);
+        self->dead->addAnimations(self->dead, flashm1Dead, deadSize);
+    } else if (e == flashm2){
+        int aliveSize = 1;
+        int deadSize = 1;
+        const char *flashm2Alive[] = {"/flashm2.sprite"};
+        const char *flashm2Dead[] = {"/flashm2.sprite"};
+        
+        self->alive->addAnimations(self->alive, flashm2Alive, aliveSize);
+        self->dead->addAnimations(self->dead, flashm2Dead, deadSize);
+    } else if (e == flashm3){
+        int aliveSize = 1;
+        int deadSize = 1;
+        const char *flashm3Alive[] = {"/flashm3.sprite"};
+        const char *flashm3Dead[] = {"/flashm3.sprite"};
+        
+        self->alive->addAnimations(self->alive, flashm3Alive, aliveSize);
+        self->dead->addAnimations(self->dead, flashm3Dead, deadSize);
     }
             
     return self;

@@ -7,6 +7,7 @@
 #ifndef ANIMATION_H
 #define ANIMATION_H
 
+#include "debug.h"
 #include <libdragon.h>
 #include <malloc.h>
 #include <stdlib.h>

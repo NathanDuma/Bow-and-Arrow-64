@@ -7,7 +7,7 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
-
+#include "debug.h"
 #include "vector.h"
 #include "animation.h"
 #include "hero.h"
@@ -22,7 +22,8 @@
 enum enemies{
     redBalloon, yellowBalloon, butterfly, 
     fire, slime, vulture, wind, scroll,
-    bullseye
+    bullseye, dove, tree, flame, watcher,
+    fairy, flashm1, flashm2, flashm3
 };
 
 typedef struct enemy{

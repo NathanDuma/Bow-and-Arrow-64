@@ -2,7 +2,7 @@
 mkdir -p sprites
 for filename in $(pwd)/png/*.png; do
     name=$(echo ${filename##*/} | cut -f 1 -d '.')
-    $N64_INST/bin/mksprite 32 "$filename" $name.sprite
+    $N64_INST/bin/mksprite 32 "$filename" $name.sprite &>/dev/null
     
 done
 mv -f *.sprite sprites

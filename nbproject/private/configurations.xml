@@ -6,16 +6,23 @@
       </df>
       <df name="sprites">
       </df>
+      <df name="temp">
+      </df>
       <in>BowandArrow64.c</in>
       <in>BowandArrow64.h</in>
       <in>animation.c</in>
       <in>animation.h</in>
+      <in>debug.c</in>
+      <in>debug.h</in>
       <in>enemy.c</in>
       <in>enemy.h</in>
       <in>hero.c</in>
       <in>hero.h</in>
+      <in>llist.c</in>
+      <in>llist.h</in>
       <in>map.c</in>
       <in>map.h</in>
+      <in>vector.c</in>
       <in>vector.h</in>
       <in>weapon.c</in>
       <in>weapon.h</in>

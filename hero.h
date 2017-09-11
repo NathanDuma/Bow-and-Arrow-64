@@ -7,6 +7,7 @@
 #ifndef HERO_H
 #define HERO_H
 
+#include "debug.h"
 #include "vector.h"
 #include "weapon.h"
 #include "animation.h"
@@ -34,7 +35,6 @@ typedef struct hero{
 } hero;
 
 hero *initHero(enum heros h, int quiverMax);
-void printMessage(const char *message, int x, int y, display_context_t *self);
 
 #ifdef __cplusplus
 extern "C" {

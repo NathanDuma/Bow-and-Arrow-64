@@ -60,36 +60,56 @@ static void move(hero *self, enum direction d){
 // caller frees self
 static void destructHero(hero *self, int quiverMax){
     // free animations
+    printDebugMessage("Calling destructAnimation(self->alive)");
     self->alive->destructAnimation(self->alive);
+    printDebugMessage("Destructed self->alive");
+    
     self->dead->destructAnimation(self->dead);
+    printDebugMessage("Destructed self->dead");
+    
     free(self->alive);
+    printDebugMessage("Freed self->alive");
+    
     free(self->dead);
+    printDebugMessage("Freed self->dead");
     
     // free vector
     free(self->v);
+    printDebugMessage("Freed self->v");
     
     // free weapons
+    printDebugMessage("Calling destructWeapon self->w[i]");
     for (int i = 0; i < quiverMax; i++){
         self->w[i]->destructWeapon(self->w[i]);
+        
         free(self->w[i]);
     }
+    printDebugMessage("Freed self->w[i]");
+    
     free(self->w);
+    printDebugMessage("Freed self->w[i]");
+    
+    printDebugMessage("END destructHero");
 }
 
 
 
 hero *initHero(enum heros h, int quiverMax){
     hero *self = malloc(sizeof(hero));
+    
+    if (!self) printDebugMessage("Failed to allocate hero *self");
+    
     // initialize type
     self->type = h;
      // initialize hit
     self->hit = false;
     // initialize  vector
-    self->v = malloc(sizeof(vector));
+    self->v = initVector();
     
     if (h == normal){
         // there are 3 animations for the normal hero
         int size = 4;
+        
         self->alive = initAnimation();
 
         const char *heroAliveSprite[] = {"/hero_without_arrow.sprite",

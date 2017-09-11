@@ -7,23 +7,25 @@
 #ifndef MAP_H
 #define MAP_H
 
+#include "debug.h"
 #include "hero.h"
 #include "enemy.h"
 #include "animation.h"
+#include "llist.h"
 #include <malloc.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
 
-bool paused; // used to pause the game
 
 typedef struct map{
-    display_context_t *disp; // render graphics to screen using the display
+    bool paused;
     int mapNumber; // current map number
     int quiverMax; // maximum amount of quivers for the map
     int enemyCount; // the amount of enemies on the map
+    display_context_t *disp; // render graphics to screen using the display
     hero *h; // the current hero character
-    enemy **e; // array of enemies on the map
+    llist *e; // testing linked list
     
     int (*render)(struct map *self);
     void (*destructMap)(struct map *self);

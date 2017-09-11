@@ -6,7 +6,6 @@
 
 #include "map.h"
 
-bool paused; // used to pause the game
 
 // get any button press from the controller
 static bool anyKey(struct controller_data *keys){
@@ -15,13 +14,6 @@ static bool anyKey(struct controller_data *keys){
            keys->c[0].R || keys->c[0].Z;
 }
 
-// prints a message on screen at x,y (max 300 characters long)
-void printMessage(const char *message, int x, int y, display_context_t *disp){
-    char tStr[300];
-    
-    sprintf(tStr, message);
-    graphics_draw_text(*disp, x, y, tStr);
-}
 
 // render the map every frame
 static int render(map *self){
@@ -37,7 +29,9 @@ static int render(map *self){
     // we are printing the scroll text now
     if (self->mapNumber % 2 == 0){
         // show the scroll animation
-        self->e[0]->playNextAnimation(self->e[0], self->disp);
+        for (llist *itEnemy = self->e; itEnemy; itEnemy = itEnemy->next){
+            ((enemy*)itEnemy->node)->playNextAnimation(((enemy*)itEnemy->node), self->disp);
+        }
         // show the dead hero animation if we are on a dead screen
         // only show this for maps where you can get hit (no balloons or bullseye map)
         if (self->mapNumber < -4 && self->mapNumber != -8){
@@ -58,51 +52,51 @@ static int render(map *self){
             printMessage("\t    ---ZAP---\n\n\n\n"
                          " Watch out for the GUARDIANS\n\n\n"
                          "\t\tThe end.",
-                         textStartX, textStartY, self->disp);
+                         textStartX, textStartY);
         } else if (self->mapNumber == -16){
             printMessage("\n\n\n\n"
                          " Yeow, they're HOT!!!\n\n\n"
                          "\t\tThe end.",
-                         textStartX, textStartY, self->disp);
+                         textStartX, textStartY);
         } else if (self->mapNumber == -14){
             printMessage("\n\n\n\n"
                          "  You can't make apple sauce\n"
                          "  with those apples!\n\n\n"
                          "\t\tThe end.",
-                         textStartX, textStartY, self->disp);
+                         textStartX, textStartY);
         } else if (self->mapNumber == -12){
             printMessage("\n\n\n\n    "
                          "Don't loose your head!\n\n\n"
                          "\t\tThe end.",
-                         textStartX, textStartY, self->disp);
+                         textStartX, textStartY);
         } else if (self->mapNumber == -10){
             printMessage("\n\n\n\n\n\t\tOUCH!\n\n\n"
                          "\t\tThe end.",
-                         textStartX, textStartY, self->disp);
+                         textStartX, textStartY);
         } else if (self->mapNumber == -8){
             printMessage("\n\n\n\n"
                          "You'll have to shoot\n"
                          "better than that to continue\n"
                          "this Quest..\n\n\n"
                          "\t\tThe end.",
-                         textStartX, textStartY, self->disp);
+                         textStartX, textStartY);
         } else if (self->mapNumber == -6){
             printMessage("\n\n\n\n"
                          "You've been Slimed...\n\n\n"
                          "\t\tThe end.",
-                         textStartX, textStartY, self->disp);
+                         textStartX, textStartY);
         } else if (self->mapNumber == -4){
             printMessage("  What is an archer without\n"
                          "  his arrows? He doesn't\n"
                          "  continue in this game.\n\n\n"
                          "\t\tThe end",
-                         textStartX, textStartY, self->disp);
+                         textStartX, textStartY);
         } else if (self->mapNumber == -2){
             printMessage("  What is an archer without\n"
                          "  his arrows? He doesn't\n"
                          "  continue in this game.\n\n\n"
                          "\t\tThe end",
-                         textStartX, textStartY, self->disp);
+                         textStartX, textStartY);
         } else if (self->mapNumber == 0){
             printMessage("\t Target Practice\n\n"
                          "Our journey begins on the\n"
@@ -117,7 +111,7 @@ static int render(map *self){
                          "\tMade by:\n"
                          "\tNathan Duma\n\n\n" 
                          "Press any button to play...",
-                         textStartX, textStartY, self->disp);
+                         textStartX, textStartY);
         } else if (self->mapNumber == 2){
             printMessage("\tMore Target Practice\n\n"
                          "Nice shooting! The only way\n"
@@ -126,7 +120,7 @@ static int render(map *self){
                          "practice makes perfect.\n"
                          "Now it gets a little tougher.\n"
                          "Only shoot the RED balloons.",
-                         textStartX, textStartY, self->disp);
+                         textStartX, textStartY);
         } else if (self->mapNumber == 4){
             printMessage("\t  Bouncing Bubbles\n\n"
                          "Having had enough target\n"
@@ -137,7 +131,7 @@ static int render(map *self){
                          "bubbles. Taking pity on the\n"
                          "little creatures, you decide\n"
                          "to free them...",
-                         textStartX, textStartY, self->disp);
+                         textStartX, textStartY);
         } else if (self->mapNumber == 6){
             printMessage("\t\t  SLIMED\n\n"
                          "The greatful butterflies tell\n"
@@ -147,7 +141,7 @@ static int render(map *self){
                          "Land! Greatest? Hah! you\n"
                          "snicker. The Quest begins.\n"
                          "In your path: the SWAMP...",
-                         textStartX, textStartY, self->disp);
+                         textStartX, textStartY);
         } else if (self->mapNumber == 8){
             printMessage("\t\tBulls Eye\n\n"
                          "As the Quest proceeds you\n"
@@ -155,7 +149,7 @@ static int render(map *self){
                          "cunning, and accuracy. The\n"
                          "tests begin! You Need a\n"
                          "Bull's Eye to Continue...",
-                         textStartX, textStartY, self->disp);
+                         textStartX, textStartY);
         } else if (self->mapNumber == 10){
             printMessage("\t\tFIREBALLS\n\n"
                          "Nice Shot! Suddenly you hear\n"
@@ -166,7 +160,7 @@ static int render(map *self){
                          "which are heading straight\n"
                          "for you. No time to seek\n"
                          "shelter...",
-                         textStartX, textStartY, self->disp);
+                         textStartX, textStartY);
         } else if (self->mapNumber == 12){
             printMessage("\t  Unfriendly Skies\n\n"
                          "Thinking those rocks may have\n"
@@ -176,7 +170,7 @@ static int render(map *self){
                          "A passing dove agrees to\n"
                          "deliver your message. Just\n"
                          "then the skies went BLACK...",
-                         textStartX, textStartY, self->disp);
+                         textStartX, textStartY);
         } else if (self->mapNumber == 14){
             printMessage("\t   Whrrrrrrrrrr\n\n"
                          "The Black Archer is\n"
@@ -187,7 +181,7 @@ static int render(map *self){
                          "existence. From beyond sight,\n"
                          "you hear a strange whirring\n"
                          "noise...",
-                         textStartX, textStartY, self->disp);
+                         textStartX, textStartY);
         } else if (self->mapNumber == 16){
             printMessage("\t   Dark Forest\n\n"
                          "As you wind your way along\n"
@@ -198,12 +192,12 @@ static int render(map *self){
                          "but trouble... I hope the\n"
                          "Message got through to\n"
                          "Khanin.",
-                         textStartX, textStartY, self->disp);
+                         textStartX, textStartY);
         } else if (self->mapNumber == 18){
             printMessage("Wow! You made it to the end!\n"
                          "Thank you for playing!\n\n\n"
                          "\t\tThe end.",
-                         textStartX, textStartY, self->disp);
+                         textStartX, textStartY);
         }
         graphics_set_color(0xFFFFFFFF, 0x00000000); // reset colours
 
@@ -222,24 +216,26 @@ static int render(map *self){
             self->h->move(self->h, down);	
         }
         
-        if (keys.c[0].start && !paused){
-            paused = true;
-        } else if (keys.c[0].start && paused){
-            paused = false;
+        if (keys.c[0].start && !self->paused){
+            self->paused = true;
+        } else if (keys.c[0].start && self->paused){
+            self->paused = false;
         }
         
-        if (paused){
-            printMessage("PAUSED", SCREENWIDTH/2, SCREENHEIGHT/2, self->disp);
+        if (self->paused){
+            printMessage("PAUSED", SCREENWIDTH/2, SCREENHEIGHT/2);
             return self->mapNumber;
         }
    
         // check collison between enemies and quiver
         for (int i = 0; i < self->enemyCount; i++){
+        for (llist *itEnemy = self->e; itEnemy; itEnemy = itEnemy->next){
             for (int j = 0; j < self->quiverMax; j++){
-                if (!self->e[i]->hit && !self->e[i]->offScreen){
-                    self->e[i]->checkCollison(self->e[i], self->h->w[j], self->h);
+                if (!((enemy*)itEnemy->node)->hit && !((enemy*)itEnemy->node)->offScreen){
+                    ((enemy*)itEnemy->node)->checkCollison(itEnemy->node, self->h->w[j], self->h);
                 } 
             }
+        }
         }
 
         // update hero animation
@@ -257,13 +253,14 @@ static int render(map *self){
 
         int offScreenEnemyCount = 0;
         int deadEnemyCount = 0;
-
+        
         // draw all enemies on the screen
-        for (int i = 0; i < self->enemyCount; i++){
-            self->e[i]->playNextAnimation(self->e[i], self->disp);
-            if (self->e[i]->offScreen) offScreenEnemyCount++;
-            if (self->e[i]->hit) deadEnemyCount++;
+        for (llist *itEnemy = self->e; itEnemy; itEnemy = itEnemy->next){
+            ((enemy*)itEnemy->node)->playNextAnimation(((enemy*)itEnemy->node), self->disp);
+            if (((enemy*)itEnemy->node)->offScreen) offScreenEnemyCount++;
+            if (((enemy*)itEnemy->node)->hit) deadEnemyCount++;
         }
+
         
         // buffer for messages
         char tStr[256];
@@ -298,19 +295,32 @@ static int render(map *self){
 // caller frees self
 static void destructMap(map *self){
     // free enemies
-    for (int i = 0; i < self->enemyCount; i++){
-        self->e[i]->destructEnemy(self->e[i]);
-        free(self->e[i]);
+    printDebugMessage("destructMap");
+    
+    printDebugMessage("Calling destructEnemy(self->e[i])");
+    for (llist *itEnemy = self->e; itEnemy; itEnemy = itEnemy->next){
+        ((enemy*)itEnemy->node)->destructEnemy(itEnemy->node);
     }
-    free(self->e);
+    printDebugMessage("Freed self->e[i]");
+    
+    printDebugMessage("Freeing self->e");
+    destructllist(self->e);
+    printDebugMessage("Freed self->e");
     
     // free hero
+    printDebugMessage("Calling destructHero");
     self->h->destructHero(self->h, self->quiverMax);
+    printDebugMessage("Freed hero");
+    
+    printDebugMessage("Freeing s->h");
     free(self->h);
+    printDebugMessage("Freed self->h");
     
+/*
     // free the display
+    printDebugMessage("Freeing self->disp");
     free(self->disp);
-    
+*/
 }
 
 /* initialize the map
@@ -331,117 +341,129 @@ static void destructMap(map *self){
 map *initMap(int mapNumber){
     map *self = (map*)malloc(sizeof(map));
     
+    if (!self) printDebugMessage("Failed to allocate map *self");
+    
+    self->disp = disp;
+    
+/*
     // basic map initialization
     self->disp = (display_context_t*)malloc(sizeof(display_context_t));
     *self->disp = 0;
+    // update the debug display
+    disp = self->disp;
+*/
     
+    self->e = NULL;
+    
+    if (!self->disp) printDebugMessage("Failed to allocate self->disp");
+    
+    self->paused = false;
     
     self->mapNumber = mapNumber;
     self->render = render;
     self->destructMap = destructMap;
     
+    self->e = NULL;
+    
     // initialize enemy, enemy count, quiver count and enemies
     if (self->mapNumber % 2 == 0){ // every even number map is a scroll with text
         self->enemyCount = 1;
-        self->e = (enemy**)malloc(sizeof(enemy*) * self->enemyCount);
         
         int enemyStartX = SCREENWIDTH/2 - 133;
         int enemyStartY = SCREENHEIGHT/2 - 110;
         
-        self->e[0] = initEnemy(scroll);
-        self->e[0]->initLocation(self->e[0], enemyStartX, enemyStartY);
-        
+        self->e = addllist(self->e, initEnemy(scroll));
+        ((enemy*)self->e->node)->initLocation(self->e->node, enemyStartX, enemyStartY);
 
     } else if (self->mapNumber == 1){
         self->quiverMax = 15;
 
         self->enemyCount = 15;
-        self->e = (enemy**)malloc(sizeof(enemy*) * self->enemyCount);
         
         int enemyStartX = 230;
         int enemyStartY = SCREENHEIGHT;
+        
         // put red balloons in 1 single line
         for (int i = 0; i < self->enemyCount; i++){
-            self->e[i] = initEnemy(redBalloon);
-            self->e[i]->initLocation(self->e[i], 
-                    enemyStartX + (i * self->e[i]->alive->a[0]->width), enemyStartY);
+            self->e = addllist(self->e, initEnemy(redBalloon));
+            ((enemy*)self->e->node)->initLocation(self->e->node, 
+               enemyStartX + (i * ((enemy*)self->e->node)->alive->a[0]->width), enemyStartY);
         }
     } else if (self->mapNumber == 3){
         self->quiverMax = 25;
 
         self->enemyCount = 20;
-        self->e = (enemy**)malloc(sizeof(enemy*) * self->enemyCount);
         
-        int heroWidth = 2 * 103;
+        int heroWidth = 2 * 103; // the hero is 103 pixels wide
 
         // put red ballons randomly
         for (int i = 0; i < self->enemyCount-5; i++){
-            self->e[i] = initEnemy(redBalloon);
-            self->e[i]->initLocation(self->e[i], 
-            rand() % (SCREENWIDTH + 1 - heroWidth) + heroWidth,
-            rand() * SCREENHEIGHT);
+            self->e = addllist(self->e, initEnemy(redBalloon));
+            ((enemy*)self->e->node)->initLocation(self->e->node,
+                rand() % (SCREENWIDTH + 1 - heroWidth) + heroWidth,
+                rand() * SCREENHEIGHT);
         }
         // put yellow balloons randomly
         for (int i = self->enemyCount-5; i < self->enemyCount; i++){
-            self->e[i] = initEnemy(yellowBalloon);
-            self->e[i]->initLocation(self->e[i], 
-            rand() % (SCREENWIDTH + 1 - heroWidth) + heroWidth,
-            rand() % SCREENHEIGHT);
+            self->e = addllist(self->e, initEnemy(yellowBalloon));
+            ((enemy*)self->e->node)->initLocation(self->e->node,
+                rand() % (SCREENWIDTH + 1 - heroWidth) + heroWidth,
+                rand() % SCREENHEIGHT);
         }
     } else if (self->mapNumber == 5){
         self->quiverMax = 50;
 
         self->enemyCount = 30;
-        self->e = (enemy**)malloc(sizeof(enemy*) * self->enemyCount);
         
-        int heroWidth = 2 * 103;
+        int heroWidth = 2 * 103; // hero is 103 width
 
         // put butterflys randomly
         for (int i = 0; i < self->enemyCount; i++){
-            self->e[i] = initEnemy(butterfly);
-            self->e[i]->initLocation(self->e[i], 
-            rand() % (SCREENWIDTH + 1 - heroWidth) + heroWidth,
-            rand() % SCREENHEIGHT);
+            self->e = addllist(self->e, initEnemy(butterfly));
+            ((enemy*)self->e->node)->initLocation(self->e->node,
+                rand() % (SCREENWIDTH + 1 - heroWidth) + heroWidth,
+                rand() % SCREENHEIGHT);
         }
     } else if (self->mapNumber == 7){
         self->quiverMax = 100;
 
         self->enemyCount = 50;
-        self->e = (enemy**)malloc(sizeof(enemy*) * self->enemyCount);
         
-        int heroWidth = 3 * 103;
-        int screenLength = 6;
+        int heroWidth = 3 * 103; // 103 is hero width
+        int screenLength = 6; // how many "screens" over the farthest enemy can be
 
         // put slimes randomly
         for (int i = 0; i < self->enemyCount; i++){
-            self->e[i] = initEnemy(slime);
-            self->e[i]->initLocation(self->e[i], 
-            rand() % ((screenLength * SCREENWIDTH) + 1 - heroWidth) + heroWidth,
-            rand() % (SCREENHEIGHT - 80));
+            self->e = addllist(self->e, initEnemy(slime));
+            ((enemy*)self->e->node)->initLocation(self->e->node,
+                rand() % ((screenLength * SCREENWIDTH) + 1 - heroWidth) + heroWidth,
+                rand() % (SCREENHEIGHT - 80));
         }
     } else if (self->mapNumber == 9){
         self->enemyCount = 1;
+        
         self->quiverMax = 10;
                 
-        self->e = (enemy**)malloc(sizeof(enemy*) * self->enemyCount);
         // put the bullseye on screen
-        self->e[0] = initEnemy(bullseye);
-        int enemyStartX = SCREENWIDTH - 4 * self->e[0]->alive->a[0]->width;
+        self->e = addllist(self->e, initEnemy(bullseye));
+        
+        int enemyStartX = SCREENWIDTH - 4 * ((enemy*)self->e->node)->alive->a[0]->width;
         int enemyStartY = rand() % (SCREENHEIGHT - 80);
-        self->e[0]->initLocation(self->e[0], enemyStartX, enemyStartY);
+        
+        ((enemy*)self->e->node)->initLocation(self->e->node,
+                                              enemyStartX, enemyStartY);
     } else if (self->mapNumber == 11){
         self->quiverMax = 100;
 
         self->enemyCount = 50;
-        self->e = (enemy**)malloc(sizeof(enemy*) * self->enemyCount);
         
-        int heroWidth = 3 * 103;
-        int screenLength = 6;
+        int heroWidth = 3 * 103; // 103 is hero width
+        int screenLength = 6; // how many screens over the fires can be
 
         // put fires randomly
         for (int i = 0; i < self->enemyCount; i++){
-            self->e[i] = initEnemy(fire);
-            self->e[i]->initLocation(self->e[i], 
+            self->e = addllist(self->e, initEnemy(fire));
+            ((enemy*)self->e->node)->initLocation(self->e->node,
             rand() % ((screenLength * SCREENWIDTH) + 1 - heroWidth) + heroWidth,
             rand() % (SCREENHEIGHT - 80));
         }
@@ -449,58 +471,85 @@ map *initMap(int mapNumber){
         self->quiverMax = 100;
 
         self->enemyCount = 50;
-        self->e = (enemy**)malloc(sizeof(enemy*) * self->enemyCount);
         
-        int heroWidth = 3 * 103;
-        int screenLength = 6;
+        int heroWidth = 3 * 103; // 103 is hero width
+        int screenLength = 6; // 6 screens over the vultures can be
 
         // put vultures randomly
         for (int i = 0; i < self->enemyCount; i++){
-            self->e[i] = initEnemy(vulture);
-            self->e[i]->initLocation(self->e[i], 
+            self->e = addllist(self->e, initEnemy(vulture));
+            ((enemy*)self->e->node)->initLocation(self->e->node,
             rand() % ((screenLength * SCREENWIDTH) + 1 - heroWidth) + heroWidth,
             rand() % (SCREENHEIGHT - 80));
         }
+        
+        // add the dove messenger to be on screen
+        // TODO: put it in the location
+        self->e = addllist(self->e, initEnemy(dove));
+        ((enemy*)self->e->node)->initLocation(self->e->node, 100, 100);
+        
     } else if (self->mapNumber == 15){
         self->quiverMax = 100;
 
         self->enemyCount = 50;
-        self->e = (enemy**)malloc(sizeof(enemy*) * self->enemyCount);
         
-        int heroWidth = 3 * 103;
-        int screenLength = 6;
+        int heroWidth = 3 * 103; // 103 is hero width
+        int screenLength = 6; // 6 screens
 
         // put vultures randomly
         for (int i = 0; i < self->enemyCount; i++){
-            self->e[i] = initEnemy(wind);
-            self->e[i]->initLocation(self->e[i], 
-            rand() % ((screenLength * SCREENWIDTH) + 1 - heroWidth) + heroWidth,
-            rand() % (SCREENHEIGHT - 80));
+            self->e = addllist(self->e, initEnemy(vulture));
+            ((enemy*)self->e->node)->initLocation(self->e->node,
+                rand() % ((screenLength * SCREENWIDTH) + 1 - heroWidth) + heroWidth,
+                rand() % (SCREENHEIGHT - 80));
         }
     } else if (self->mapNumber == 17){
         self->quiverMax = 100;
 
         self->enemyCount = 50;
-        self->e = (enemy**)malloc(sizeof(enemy*) * self->enemyCount);
         
-        int heroWidth = 3 * 103;
-        int screenLength = 6;
+        int heroWidth = 3 * 103; // 103 is hero width
+        int screenLength = 6; // 6 screens
         
         // put fire, slime, vulture, wind in this array to choose randomly
         //const int randomEnemy[4] = {3, 4, 5, 6};
 
         // put enemies randomly
         for (int i = 0; i < self->enemyCount; i++){
-            self->e[i] = initEnemy(scroll);
-            self->e[i]->initLocation(self->e[i], 
-            rand() % ((screenLength * SCREENWIDTH) + 1 - heroWidth) + heroWidth,
-            rand() % (SCREENHEIGHT - 80));
+            self->e = addllist(self->e, initEnemy(vulture));
+            ((enemy*)self->e->node)->initLocation(self->e->node,
+                rand() % ((screenLength * SCREENWIDTH) + 1 - heroWidth) + heroWidth,
+                rand() % (SCREENHEIGHT - 80));
         }
     }
+/*
+    else if (self->mapNumber == 25){ // test map
+        self->quiverMax = 10;
+
+        self->enemyCount = 1;
+        
+        self->e = (enemy**)malloc(sizeof(enemy*) * self->enemyCount);
+        int enemyStartX = SCREENWIDTH/2 - 133;
+        int enemyStartY = SCREENHEIGHT/2 - 110;
+        
+        const int randomEnemy[4] = {1, 2, 3, 4};
+
+        // put enemies randomly
+        for (int i = 0; i < 41; i++){
+            self->ee = addllist(self->ee, initEnemy(randomEnemy[rand() % 4]));
+            ((enemy*)self->ee->node)->initLocation(self->ee->node, 
+            rand() % SCREENWIDTH,
+            rand() % (SCREENHEIGHT - 80));
+        }
+        
+        
+        self->e[0] = initEnemy(redBalloon);
+        self->e[0]->initLocation(self->e[0], enemyStartX, enemyStartY);
+        
+    }
     
+*/
     self->h = initHero(normal, self->quiverMax);
-    
-    paused = false;
     
     return self;
 }

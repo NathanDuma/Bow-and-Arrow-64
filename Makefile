@@ -41,9 +41,9 @@ $(PROG_NAME).v64: $(PROG_NAME).elf spritemap.dfs
 	$(CHKSUM64PATH) $(PROG_NAME).v64
 
 
-$(PROG_NAME).elf : $(PROG_NAME).o map.o hero.o enemy.o weapon.o animation.o
+$(PROG_NAME).elf : $(PROG_NAME).o map.o hero.o enemy.o weapon.o animation.o vector.o llist.o debug.o
 
-	$(LD) -o $(PROG_NAME).elf $(PROG_NAME).o map.o hero.o enemy.o weapon.o animation.o $(LINK_FLAGS)
+	$(LD) -o $(PROG_NAME).elf $(PROG_NAME).o map.o hero.o enemy.o weapon.o animation.o vector.o llist.o debug.o $(LINK_FLAGS)
 
 
 
@@ -55,8 +55,6 @@ copy: $(PROG_NAME).v64
 
 spritemap.dfs:
 
-	./mkSprite
-
 	$(MKDFSPATH) spritemap.dfs ./sprites/
 
 
@@ -67,4 +65,4 @@ all: $(PROG_NAME).v64
 
 clean:
 
-	rm -f *.v64 *.elf *.o *.bin *.dfs
+	rm -f *.elf *.o *.bin *.dfs
