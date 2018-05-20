@@ -83,18 +83,18 @@ static void move(enemy *self){
             }
         }
     } else{ // dead animations
-        if (self->type == redBalloon || self->type == yellowBalloon){
+
+        if (checkOffScreen(&self->v->x, &self->v->y)){
+            // put the enemy off screen at (-100, -100)
+            self->v->x = -100;
+            self->v->y = -100;
+        } else if (self->type == redBalloon || self->type == yellowBalloon){
             float inc = 5.0;
             self->v->y += inc;
         } else if (self->type == butterfly){
             float inc = 5.0;
             self->v->x -= inc;
             self->v->y -= inc;
-        } else if (self->type == slime || self->type == bullseye ||
-                   self->type == fire || self->type == vulture ||
-                   self->type == wind){
-            self->v->x = -100;
-            self->v->y = -100;
         }
     }
 }

@@ -15,11 +15,14 @@
 typedef struct llist{
     void *node;
     struct llist *next;
+    struct llist *prev;
 } llist;
 
 
+bool testtraversalllist(llist **head);
 llist *addllist(llist *head, void *item);
 void destructllist(llist *head);
+void deleteitemllist(llist **node);
 
 #ifdef __cplusplus
 extern "C" {

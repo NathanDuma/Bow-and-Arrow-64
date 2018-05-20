@@ -12,6 +12,7 @@
       <in>enemy.h</in>
       <in>hero.c</in>
       <in>hero.h</in>
+      <in>llist.c</in>
       <in>map.c</in>
       <in>map.h</in>
       <in>vector.c</in>
@@ -78,6 +79,8 @@
       <item path="hero.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="hero.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="llist.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="map.c" ex="false" tool="0" flavor2="0">
       </item>

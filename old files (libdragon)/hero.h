@@ -8,6 +8,7 @@
 #define HERO_H
 
 #include "debug.h"
+#include "llist.h"
 #include "vector.h"
 #include "weapon.h"
 #include "animation.h"
@@ -25,13 +26,13 @@ typedef struct hero{
     bool hit; // whether the hero has been hit by an enemy or not
     int quiverCount; // amount of quivers left
     vector *v; // position of hero
-    weapon **w; // the weapons the hero has
+    llist *w; // the weapons the hero has
     animation *alive; // alive animation of hero
     animation *dead; // dead animation of hero
     
     void (*playNextAnimation)(struct hero *self, display_context_t *disp, bool pressed);
     void (*move)(struct hero *self, enum direction d);
-    void (*destructHero)(struct hero *self, int quiverMax);
+    void (*destructHero)(struct hero *self);
 } hero;
 
 hero *initHero(enum heros h, int quiverMax);

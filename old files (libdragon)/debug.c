@@ -44,14 +44,10 @@ static bool prefix(const char *str){
     const char *failed = "Failed";
     
     if (strncmp(end, str, strlen(end)) == 0){
-        return false;
         graphics_set_color(0xFF000000, 0x00000000); // make text colour RED
     } else if (strncmp(failed, str, strlen(failed)) == 0){
         graphics_set_color(0x0000FF00, 0x00000000); // make colour 
-    } else{
-        return false;
     }
-    
     return true;
 }
 
@@ -68,7 +64,7 @@ void printDebugMessage(const char *message){
     if (!debug) return;
     
     // change to RED if starts with "END"
-    if (!prefix(message)) return;
+    prefix(message);
     
     sprintf(tStr, message);
     graphics_draw_text(*disp, startDebugX, startDebugY, tStr);
