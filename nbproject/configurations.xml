@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="100">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df root="." name="0">
+      <in>cont.c</in>
+      <in>cont.h</in>
+      <in>gfxinit.c</in>
+      <in>graphic.c</in>
+      <in>graphic.h</in>
+      <in>main.c</in>
+      <in>main.h</in>
+      <in>segment.h</in>
+      <in>sp_hero.c</in>
+      <in>sp_hero.h</in>
+      <in>sp_nintendologo.c</in>
+      <in>sp_nintendologo.h</in>
+      <in>sp_sixtyfour.c</in>
+      <in>sp_sixtyfour.h</in>
+      <in>spec</in>
+    </df>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+      <itemPath>nbproject/private/launcher.properties</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
+  <sourceRootList>
+    <Elem>.</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <codeAssistance>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>.</buildCommandWorkingDir>
+          <buildCommand>${MAKE} -f Makefile</buildCommand>
+          <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
+          <executablePath></executablePath>
+          <cTool>
+            <incDir>
+              <pElem>../../../../ultra/usr/include</pElem>
+              <pElem>../../../../ultra/usr/include/PR</pElem>
+              <pElem>../../../../nintendo/n64kit/nusys/include</pElem>
+              <pElem>../../../../nintendo/n64kit/nustd/include</pElem>
+            </incDir>
+            <incFile>
+              <pElem>../../../../nintendo/n64kit/nusys/include/nusys.h</pElem>
+              <pElem>../../../../ultra/usr/include/ultra64.h</pElem>
+            </incFile>
+          </cTool>
+        </makeTool>
+        <preBuild>
+          <preBuildCommandWorkingDir>.</preBuildCommandWorkingDir>
+          <preBuildCommand></preBuildCommand>
+        </preBuild>
+      </makefileType>
+      <item path="cont.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="cont.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="gfxinit.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="graphic.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="graphic.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="main.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="segment.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="sp_hero.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="sp_hero.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="sp_nintendologo.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="sp_nintendologo.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="sp_sixtyfour.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="sp_sixtyfour.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="spec" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
