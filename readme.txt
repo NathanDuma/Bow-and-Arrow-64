@@ -1,23 +1,9 @@
-This directory is a sample for reading a Controller for NuSystem.
+Bow and Arrow 64 for the Nintendo 64, remake of the shareware game B&ARROW.
 
-The square can be moved using the Control Stick.
+How to play:
 
-Use the A button to switch the direction of rotation.  
+Use the DPAD or joystick to move the archer up and down. Hold A to prepare an arrow and let go of A to shoot. Become the greatest archer and complete all 12 levels!
 
-Use the B button to increase the rotation speed.
+If you play using an emulator, please use the DPAD since movement of the archer depends on the sensitivity of the joystick.
 
-The sample source consists of the following files.
-
-main.c		Main routine/Structure of game processing
-		
-main.h		Declaration of the argument to be used for a game
-
-stage00.c	Create DL/Display processing and game processing
-
-graphic.h	A definition of outside reference for graphics etc.
-
-graphic.c	General routine for graphics
-
-gfxinit.c	A static DL to initialize RSP/RDP
-
-spec		Spec file for makerom
+Have fun!
