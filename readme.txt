@@ -6,4 +6,6 @@ Use the DPAD or joystick to move the archer up and down. Hold A to prepare an ar
 
 If you play using an emulator, please use the DPAD since movement of the archer depends on the sensitivity of the joystick.
 
+Made using the official Nintendo 64 SDK. This game uses the NuSystem with the sprite microcode.
+
 Have fun!
