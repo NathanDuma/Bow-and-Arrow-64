@@ -1,4 +1,6 @@
-Bow and Arrow 64 for the Nintendo 64, remake of the shareware game B&ARROW.
+# Bow and Arrow 64
+
+A remake of the shareware game B&ARROW for the Nintendo 64.
 
 How to play:
 
